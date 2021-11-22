@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hvac-deployment
+  labels:
+    app: log680-lab2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log680-lab2
+  template:
+    metadata:
+      labels:
+        app: log680-lab2
+    spec:
+      containers:
+      - name: log680-lab2
+        image: log680-lab2:latest
+        ports:
+        - containerPort: 80
