@@ -52,7 +52,7 @@ class Main:
         """Setup function"""
         self.set_sensor_hub()
 
-    def __connectToDb(self):
+    def connectToDb(self):
         return pymysql.connect(host='rds-mysql-log680.c7uah2hdmjkm.us-east-2.rds.amazonaws.com',
                                     user='admin',
                                     password='gr01eq07',
@@ -133,13 +133,7 @@ class Main:
 
 
     def insert_hvac_event_toDb(self, timestamp, event, ticks):
-        connection = pymysql.connect(host='rds-mysql-log680.c7uah2hdmjkm.us-east-2.rds.amazonaws.com',
-                                    user='admin',
-                                    password='gr01eq07',
-                                    db='log680_db_gr01_eq07',
-                                    port=3306,
-                                    )
-
+        connection = self.connectToDb()
         try: 
             with connection:
                 with connection.cursor() as cursor:
@@ -151,18 +145,16 @@ class Main:
                 # connection is not autocommit by default. So you must commit to save
                 # your changes.
                 connection.commit()
+
+                return True
         except Exception as err: 
             print(err)
+            return False
 
 
 
     def insert_temperature_toDb(self, timestamp, temperature):
-        connection = pymysql.connect(host='rds-mysql-log680.c7uah2hdmjkm.us-east-2.rds.amazonaws.com',
-                                    user='admin',
-                                    password='gr01eq07',
-                                    db='log680_db_gr01_eq07',
-                                    port=3306,
-                                    )
+        connection = self.connectToDb()
         # timestamp = timestamp.str
         try:
             with connection:
@@ -175,8 +167,11 @@ class Main:
                 # connection is not autocommit by default. So you must commit to save
                 # your changes.
                 connection.commit()
+                return True
+
         except Exception as err: 
             print(err)
+            return False
 
 
 if __name__ == '__main__':
