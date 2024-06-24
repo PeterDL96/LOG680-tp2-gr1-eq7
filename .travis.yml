@@ -10,6 +10,13 @@ before_install:
   - docker ps -a
   - docker run projetsplets1/log680-lab2 python3 test/test_main.py
 
+install:
+  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  - chmod +x ./kubectl
+  - sudo mv ./kubectl /usr/local/bin/kubectl
+  - mkdir ${HOME}/.kube
+  - echo "$KUBE_CONFIG" | base64 --decode > ${HOME}/.kube/config
+
 # Deploy docker image
 deploy:
   provider: script
@@ -17,5 +24,5 @@ deploy:
   on:
     branch: main
 
-script: echo "script"
-
+script: 
+  - kubectl get pods
